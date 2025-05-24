@@ -1,0 +1,402 @@
+<?xml version="1.0"?>
+<robot name="goliath" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:macro name="goliath_description">
+
+    <xacro:include filename="materials.xacro" />
+    <xacro:include filename="macros.xacro" />
+    <xacro:include filename="wheels.xacro" />
+    <xacro:include filename="ros2_control.xacro" />
+
+    <xacro:property name="plate_radius" value="0.57" />
+    <xacro:property name="plate_height" value="0.01" />
+
+    <xacro:property name="chassis_weight" value="1.0" />
+
+    <xacro:property name="driving_wheel_diameter" value="0.165" />
+    <xacro:property name="driving_wheel_thickness" value="0.045" />
+    <xacro:property name="driving_wheel_weight" value="2.2" />
+    <xacro:property name="driving_wheel_base_gap" value="0.01" />
+
+    <xacro:property name="caster_wheel_diameter" value="0.09" />
+    <xacro:property name="caster_wheel_weight" value="0.1" />
+
+    
+    <link name="base_link">
+    </link>
+
+    <link name="base_footprint">
+    </link>
+
+    <link name="unilidar_imu_initial">
+    </link>
+    
+    
+    <link name="plate">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://hoverboard_demo_description/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <material name="gray"/>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://hoverboard_demo_description/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </collision>
+        <xacro:cylinder_inertia m="0.5" r="${plate_radius}" h="${plate_height}" roll="${pi/2}"/>
+    </link>
+    
+   	 <link name="lidar">
+ 	 <inertial>
+ 	   <origin xyz="-0.008294099570319567 -3.8749192144224396e-17 0.05020114222279101" rpy="0 0 0"/>
+ 	   <mass value="1.1515616542314224"/>
+ 	   <inertia ixx="0.000489" iyy="0.000861" izz="0.000987" ixy="-0.0" iyz="-0.0" ixz="-0.000148"/>
+	  </inertial>
+	  <visual>
+	    <origin xyz="-0.0 -0.0 -0.141" rpy="0 0 0"/>
+	    <geometry>
+ 	     <mesh filename="file://$(find hoverboard_demo_description)/meshes/lidar.stl" scale="0.001 0.001 0.001"/>
+	    </geometry>
+	    <material name="black"/>
+ 	 </visual>
+	  <collision>
+  	  <origin xyz="-0.0 -0.0 -0.141" rpy="0 0 0"/>
+ 	   <geometry>
+  	    <mesh filename="file://$(find hoverboard_demo_description)/meshes/lidar.stl" scale="0.001 0.001 0.001"/>
+  	  </geometry>
+ 	 </collision>
+	</link>
+	
+	<link name="imu">
+  	<inertial>
+  	  <origin xyz="-0.01898812297806371 9.133494040341156e-05 0.000862164665477741" rpy="0 0 0"/>
+  	  <mass value="0.004997129426507204"/>
+  	  <inertia ixx="0.0" iyy="0.0" izz="0.0" ixy="0.0" iyz="-0.0" ixz="-0.0"/>
+	  </inertial>
+	  <visual>
+ 	   <origin xyz="0.164479 -0.0 -0.108" rpy="0 0 0"/>
+ 	   <geometry>
+	      <mesh filename="file://$(find hoverboard_demo_description)/meshes/imu.stl" scale="0.001 0.001 0.001"/>
+	    </geometry>
+ 	   <material name="black"/>
+ 	 </visual>
+ 	 <collision>
+  	  <origin xyz="0.164479 -0.0 -0.108" rpy="0 0 0"/>
+  	  <geometry>
+  	    <mesh filename="file://$(find hoverboard_demo_description)/meshes/imu.stl" scale="0.001 0.001 0.001"/>
+  	  </geometry>
+ 	 </collision>
+	</link>
+	
+	<link name="front_plate">
+	  <inertial>
+ 	   <origin xyz="-0.00500000000000006 -2.416750931496303e-16 0.05201635561346364" rpy="0 0 0"/>
+	    <mass value="1.8028979735720785"/>
+	    <inertia ixx="0.02436" iyy="0.001727" izz="0.022643" ixy="0.0" iyz="0.0" ixz="-0.0"/>
+	  </inertial>
+	  <visual>
+ 	   <origin xyz="-0.32 -0.0 -0.071" rpy="0 0 0"/>
+ 	   <geometry>
+	      <mesh filename="file://$(find hoverboard_demo_description)/meshes/front_plate.stl" scale="0.001 0.001 0.001"/>
+	    </geometry>
+ 	   <material name="blue"/>
+ 	 </visual>
+ 	 <collision>
+ 	   <origin xyz="-0.32 -0.0 -0.071" rpy="0 0 0"/>
+ 	   <geometry>
+ 	     <mesh filename="file://$(find hoverboard_demo_description)/meshes/front_plate.stl" scale="0.001 0.001 0.001"/>
+ 	   </geometry>
+ 	 </collision>
+	</link>
+
+	<link name="rear_plate">
+	  <inertial>
+  	  <origin xyz="0.003999999999999948 -2.6213617996365013e-16 0.052162485409430734" rpy="0 0 0"/>
+  	  <mass value="1.9065179735720788"/>
+ 	   <inertia ixx="0.025647" iyy="0.001735" izz="0.023924" ixy="0.0" iyz="0.0" ixz="-0.0"/>
+  	</inertial>
+  	<visual>
+ 	   <origin xyz="0.32 -0.0 -0.071" rpy="0 0 0"/>
+  	  <geometry>
+  	    <mesh filename="file://$(find hoverboard_demo_description)/meshes/rear_plate.stl" scale="0.001 0.001 0.001"/>
+  	  </geometry>
+ 	   <material name="blue"/>
+ 	 </visual>
+ 	 <collision>
+ 	   <origin xyz="0.32 -0.0 -0.071" rpy="0 0 0"/>
+ 	   <geometry>
+ 	     <mesh filename="file://$(find hoverboard_demo_description)/meshes/rear_plate.stl" scale="0.001 0.001 0.001"/>
+ 	   </geometry>
+ 	 </collision>
+	</link>
+
+	<link name="right_plate">
+ 	 <inertial>
+ 	   <origin xyz="-0.0010632594372099004 0.002000000000000085 0.06859611162847648" rpy="0 0 0"/>
+ 	   <mass value="2.2154231115200234"/>
+ 	   <inertia ixx="0.002726" iyy="0.075573" izz="0.07286" ixy="0.0" iyz="0.0" ixz="-2.2e-05"/>
+ 	 </inertial>
+ 	 <visual>
+ 	   <origin xyz="-0.0 0.24 -0.065" rpy="0 0 0"/>
+ 	   <geometry>
+  	    <mesh filename="file://$(find hoverboard_demo_description)/meshes/right_plate.stl" scale="0.001 0.001 0.001"/>
+ 	   </geometry>
+  	  <material name="blue"/>
+ 	 </visual>
+  	<collision>
+  	  <origin xyz="-0.0 0.24 -0.065" rpy="0 0 0"/>
+  	  <geometry>
+  	    <mesh filename="file://$(find hoverboard_demo_description)/meshes/right_plate.stl" scale="0.001 0.001 0.001"/>
+  	  </geometry>
+ 	 </collision>
+	</link>
+
+	<link name="left_plate">
+ 	 <inertial>
+ 	   <origin xyz="-0.001063259437208634 -0.0019999999999998908 0.06859611162847654" rpy="0 0 0"/>
+ 	   <mass value="2.2154231115200127"/>
+ 	   <inertia ixx="0.002726" iyy="0.075573" izz="0.07286" ixy="-0.0" iyz="-0.0" ixz="-2.2e-05"/>
+	  </inertial>
+	  <visual>
+	    <origin xyz="-0.0 -0.24 -0.065" rpy="0 0 0"/>
+	    <geometry>
+ 	     <mesh filename="file://$(find hoverboard_demo_description)/meshes/left_plate.stl" scale="0.001 0.001 0.001"/>
+ 	   </geometry>
+	    <material name="blue"/>
+ 	 </visual>
+ 	 <collision>
+ 	   <origin xyz="-0.0 -0.24 -0.065" rpy="0 0 0"/>
+  	  <geometry>
+ 	     <mesh filename="file://$(find hoverboard_demo_description)/meshes/left_plate.stl" scale="0.001 0.001 0.001"/>
+	    </geometry>
+	  </collision>
+	</link>
+
+	<link name="top_cover">
+	  <inertial>
+ 	   <origin xyz="-0.16950000288337444 0.17099999714191824 0.003000000000000058" rpy="0 0 0"/>
+ 	   <mass value="5.769750000000013"/>
+ 	   <inertia ixx="0.058917" iyy="0.058917" izz="0.117799" ixy="0.0" iyz="-0.0" ixz="-0.0"/>
+	  </inertial>
+	  <visual>
+ 	   <origin xyz="-0.1695 0.171 -0.2165" rpy="0 0 0"/>
+ 	   <geometry>
+ 	     <mesh filename="file://$(find hoverboard_demo_description)/meshes/top_cover.stl" scale="0.001 0.001 0.001"/>
+ 	   </geometry>
+ 	   <material name="blue"/>
+	  </visual>
+	  <collision>
+	    <origin xyz="-0.1695 0.171 -0.2165" rpy="0 0 0"/>
+	    <geometry>
+ 	     <mesh filename="file://$(find hoverboard_demo_description)/meshes/top_cover.stl" scale="0.001 0.001 0.001"/>
+ 	   </geometry>
+ 	 </collision>
+	</link>
+
+
+
+  <!-- helper macro for the arm -->
+  <xacro:include filename="$(find ros2_control_demo_description)/goliath/urdf/inc/create_link.xacro"/>
+
+  <xacro:create_link
+      link_name="arm_base_link"
+      xyz_offset="0 0 0"
+      rpy_offset="0 0 0"
+      mesh_package="ros2_control_demo_description/goliath"
+      mesh_name="link_0"
+  />
+
+  <xacro:create_link
+      link_name="link_1"
+      xyz_offset="0 0 0"
+      rpy_offset="0 0 0"
+      mesh_package="ros2_control_demo_description/goliath"
+      mesh_name="link_1"
+  />
+
+  <xacro:create_link
+      link_name="link_2"
+      xyz_offset="0 0 0"
+      rpy_offset="0 0 0"
+      mesh_package="ros2_control_demo_description/goliath"
+      mesh_name="link_2"
+  />
+
+  <xacro:create_link
+      link_name="link_3"
+      xyz_offset="0 0 0"
+      rpy_offset="0 0 0"
+      mesh_package="ros2_control_demo_description/goliath"
+      mesh_name="link_3"
+  />
+
+  <xacro:create_link
+      link_name="link_4"
+      xyz_offset="0 0 0"
+      rpy_offset="0 0 0"
+      mesh_package="ros2_control_demo_description/goliath"
+      mesh_name="link_4"
+  />
+
+  <xacro:create_link
+      link_name="link_5"
+      xyz_offset="0 0 0"
+      rpy_offset="0 0 0"
+      mesh_package="ros2_control_demo_description/goliath"
+      mesh_name="link_5"
+  />
+
+  <xacro:create_link
+      link_name="link_6"
+      xyz_offset="0 0 0"
+      rpy_offset="0 0 0"
+      mesh_package="ros2_control_demo_description/goliath"
+      mesh_name="link_6"
+  />
+
+  <link name="ft_frame"/>
+  <link name="tool0"/>
+
+  <!-- base_joint fixes arm_base_link to the mobile base -->
+  <joint name="arm_base_joint" type="fixed">
+    <parent link="top_cover"/>
+    <child link="arm_base_link"/>
+    <origin xyz="-0.20 0.175 0" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+
+  <!-- joints - main serial chain -->
+  <joint name="joint_1" type="revolute">
+    <parent link="arm_base_link"/>
+    <child link="link_1"/>
+    <origin xyz="0 0 0.104" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="1000.0" lower="${-pi}" upper="${pi}" velocity="2.5"/>
+  </joint>
+
+  <joint name="joint_2" type="revolute">
+    <parent link="link_1"/>
+    <child link="link_2"/>
+    <origin xyz="0 -0.060768 0.1694" rpy="${-pi/2} ${-pi/2} ${pi}"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="1000.0" lower="${-pi/2}" upper="${pi/2}" velocity="2.5"/>
+  </joint>
+
+  <joint name="joint_3" type="revolute">
+    <parent link="link_2"/>
+    <child link="link_3"/>
+    <origin xyz="0.315 0 -0.0198" rpy="0 ${pi} 0"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="1000.0" lower="${-pi/1.2}" upper="${pi/1.2}" velocity="2.5"/>
+  </joint>
+
+  <joint name="joint_4" type="revolute">
+    <parent link="link_3"/>
+    <child link="link_4"/>
+    <origin xyz="0.066258 0 0.036577" rpy="0 ${pi/2} 0"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="1000.0" lower="${-pi}" upper="${pi}" velocity="2.5"/>
+  </joint>
+
+  <joint name="joint_5" type="revolute">
+    <parent link="link_4"/>
+    <child link="link_5"/>
+    <origin xyz="0.02456 0 -0.319213" rpy="0 ${pi/2} ${pi}"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="1000.0" lower="${-pi/1.5}" upper="${pi/1.5}" velocity="2.5"/>
+  </joint>
+
+  <joint name="joint_6" type="revolute">
+    <parent link="link_5"/>
+    <child link="link_6"/>
+    <origin xyz="0.07318 0 0.02435" rpy="0 ${pi/2} 0"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="1000.0" lower="${-pi}" upper="${pi}" velocity="2.5"/>
+  </joint>
+
+  <joint name="joint-ft_frame" type="fixed">
+    <parent link="link_6"/>
+    <child link="ft_frame"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <joint name="joint-tool" type="fixed">
+    <parent link="ft_frame"/>
+    <child link="tool0"/>
+    <origin xyz="0 0 0.02" rpy="0 0 0"/>
+  </joint>
+  
+  
+    <joint name="base_link_plate_joint" type="fixed">
+        <origin rpy="0 0 0" xyz="0 0 0" />
+        <parent link="base_link" />
+        <child link="plate" />
+    </joint>
+    
+    <joint name="base_link_print_joint" type="fixed">
+        <origin rpy="0 0 0" xyz="0 0 0" />
+        <parent link="base_link" />
+        <child link="base_footprint" />
+    </joint>
+    
+<joint name="lidar_joint" type="fixed">
+  <origin xyz="0.0 0.0 0.141" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="lidar"/>
+</joint>
+
+   
+<joint name="imu_joint" type="fixed">
+  <origin xyz="-0.164479 0.0 0.108" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="imu"/>
+</joint>
+
+<joint name="front_plate_joint" type="fixed">
+  <origin xyz="0.32 0.0 0.071" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="front_plate"/>
+</joint>
+
+<joint name="rear_plate_joint" type="fixed">
+  <origin xyz="-0.32 0.0 0.071" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="rear_plate"/>
+</joint>
+
+<joint name="right_plate_joint" type="fixed">
+  <origin xyz="0.0 -0.24 0.065" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="right_plate"/>
+</joint>
+
+<joint name="left_plate_joint" type="fixed">
+  <origin xyz="0.0 0.24 0.065" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="left_plate"/>
+</joint>
+
+<joint name="top_cover_joint" type="fixed">
+  <origin xyz="0.1695 -0.171 0.2165" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="top_cover"/>
+</joint>
+
+<joint name="unilidar_joint" type="fixed">
+  <origin xyz="0.3 0 0.04" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="unilidar_imu_initial"/>
+</joint>
+
+    <xacro:driving_wheel suffix="front_left" reflect="1" position="0.19"/>
+    <xacro:driving_wheel suffix="front_right" reflect="-1" position="0.19"/>
+
+    <xacro:driving_wheel suffix="back_left" reflect="1" position="-0.19"/>
+    <xacro:driving_wheel suffix="back_right" reflect="-1" position="-0.19"/>
+
+</xacro:macro>
+
+</robot>

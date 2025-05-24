@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="goliath_ros2_control" params="name">
+
+    <!-- Hoverboard Front Controller -->
+    <ros2_control name="${name}_front" type="system">
+      <hardware>
+        <plugin>hoverboard_hardware_interface/HoverboardHardwareInterface</plugin>
+        <param name="left_wheel_joint_name">driving_wheel_front_left_joint</param>
+        <param name="right_wheel_joint_name">driving_wheel_front_right_joint</param>
+        <param name="loop_rate">40</param>
+        <param name="device">/dev/ttyUSB0</param>
+        <param name="baud_rate">115200</param>
+        <param name="timeout">1000</param>
+        <param name="encoder_ticks_per_revolution">90</param>
+      </hardware>
+      
+      <joint name="driving_wheel_front_left_joint">
+        <command_interface name="velocity"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+      
+      <joint name="driving_wheel_front_right_joint">
+        <command_interface name="velocity"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+    </ros2_control>
+
+    <!-- Hoverboard Back Controller -->
+    <ros2_control name="${name}_back" type="system">
+      <hardware>
+        <plugin>hoverboard_hardware_interface/HoverboardHardwareInterface</plugin>
+        <param name="left_wheel_joint_name">driving_wheel_back_left_joint</param>
+        <param name="right_wheel_joint_name">driving_wheel_back_right_joint</param>
+        <param name="loop_rate">40</param>
+        <param name="device">/dev/ttyUSB1</param>
+        <param name="baud_rate">115200</param>
+        <param name="timeout">1000</param>
+        <param name="encoder_ticks_per_revolution">90</param>
+      </hardware>
+      
+      <joint name="driving_wheel_back_left_joint">
+        <command_interface name="velocity"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+      
+      <joint name="driving_wheel_back_right_joint">
+        <command_interface name="velocity"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+    </ros2_control>
+
+    <!-- Goliath Arm Controller -->
+    <ros2_control name="${name}_arm" type="system">
+      <hardware>
+        <plugin>goliath_controller/RobotSystem</plugin>
+        <param name="position1_joint_name">joint_1</param>
+        <param name="position2_joint_name">joint_2</param>
+        <param name="position3_joint_name">joint_3</param>
+        <param name="position4_joint_name">joint_4</param>
+        <param name="position5_joint_name">joint_5</param>
+        <param name="position6_joint_name">joint_6</param>
+        <param name="loop_rate">50</param>
+        <param name="device">/dev/ttyACM0</param>
+        <param name="baud_rate">115200</param>
+        <param name="timeout">1000</param>
+      </hardware>
+
+      <!-- Joint definitions for the arm -->
+      <joint name="joint_1">
+        <command_interface name="position">
+          <param name="min">${-2*pi}</param>
+          <param name="max">${2*pi}</param>
+        </command_interface>
+        <state_interface name="position">
+          <param name="initial_value">0.0</param>
+        </state_interface>
+        <state_interface name="velocity"/>
+      </joint>
+
+      <joint name="joint_2">
+        <command_interface name="position">
+          <param name="min">${-2*pi}</param>
+          <param name="max">${2*pi}</param>
+        </command_interface>
+        <state_interface name="position">
+          <param name="initial_value">0.0</param>
+        </state_interface>
+        <state_interface name="velocity"/>
+      </joint>
+
+      <joint name="joint_3">
+        <command_interface name="position">
+          <param name="min">${-pi}</param>
+          <param name="max">${pi}</param>
+        </command_interface>
+        <state_interface name="position">
+          <param name="initial_value">0.0</param>
+        </state_interface>
+        <state_interface name="velocity"/>
+      </joint>
+
+      <joint name="joint_4">
+        <command_interface name="position">
+          <param name="min">${-2*pi}</param>
+          <param name="max">${2*pi}</param>
+        </command_interface>
+        <state_interface name="position">
+          <param name="initial_value">0.0</param>
+        </state_interface>
+        <state_interface name="velocity"/>
+      </joint>
+
+      <joint name="joint_5">
+        <command_interface name="position">
+          <param name="min">${-2*pi}</param>
+          <param name="max">${2*pi}</param>
+        </command_interface>
+        <state_interface name="position">
+          <param name="initial_value">0.0</param>
+        </state_interface>
+        <state_interface name="velocity"/>
+      </joint>
+
+      <joint name="joint_6">
+        <command_interface name="position">
+          <param name="min">${-2*pi}</param>
+          <param name="max">${2*pi}</param>
+        </command_interface>
+        <state_interface name="position">
+          <param name="initial_value">0.0</param>
+        </state_interface>
+        <state_interface name="velocity"/>
+      </joint>
+    </ros2_control>
+
+  </xacro:macro>
+</robot>

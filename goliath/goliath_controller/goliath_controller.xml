@@ -1,0 +1,16 @@
+<library path="goliath_controller">
+  <class name="goliath_controller/RobotSystem"
+         type="goliath_controller::RobotSystem"
+         base_class_type="hardware_interface::SystemInterface">
+    <description>
+      Robot hardware plugin for 6 dof robot tutorial.
+    </description>
+  </class>
+  <class name="goliath_controller/RobotController"
+         type="goliath_controller::RobotController"
+         base_class_type="controller_interface::ControllerInterface">
+    <description>
+      Robot controller plugin for 6 dof robot tutorial.
+    </description>
+  </class>
+</library>
