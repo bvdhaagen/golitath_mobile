@@ -1,2 +1,2 @@
 # golitath_mobile
-Golitah mobile is a semi industrial 6 dof robot arm on a 4x4 hoverboard AVG
+Golitah mobile is a 4 wheel drive AVG that serves as mobile base for the robot arm.
